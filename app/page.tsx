@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Github, Linkedin, Twitter, Mail, ExternalLink, ArrowDown, MapPin, Phone, Send } from "lucide-react"
+import { Github, Linkedin, Mail, ExternalLink, ArrowDown, MapPin, Phone, Send, BookOpen } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,60 +11,81 @@ import Image from "next/image"
 
 const experiences = [
   {
-    period: "2023 — Present",
-    title: "Senior Frontend Engineer",
-    company: "TechCorp",
-    description: "Build and maintain critical components used to construct the frontend. Work closely with cross-functional teams to implement accessible UI components.",
-    technologies: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
-    link: "#"
+    period: "Dec 2022 — Present",
+    title: "Software Developer, Backend",
+    company: "IT Himalaya Pvt Ltd (Procit BV, Netherlands)",
+    location: "Kathmandu, Nepal",
+    description: [
+      "Designed microservices architecture using Node.js and Express for KCM / moveXM, building modular REST APIs with Swagger and implementing JWT-based authentication. Integrated Flowmailer and SurveyJS for scalable survey and notification workflows",
+      "Optimized PostgreSQL systems (functions, triggers, procedures) to handle datasets exceeding 700-800M records, achieving 1-2s response times and improving query performance",
+      "Containerized services using Docker and deployed on Azure with storage integration, improving scalability and environment consistency",
+      "Delivered features in Agile teams, contributing to code reviews and sprint cycles. Automated workflows with shell scripts and cron jobs"
+    ],
+    technologies: ["Node.js", "Express", "PostgreSQL", "Docker", "Azure", "JWT", "REST APIs"],
   },
   {
-    period: "2021 — 2023",
-    title: "Frontend Developer",
-    company: "StartupX",
-    description: "Developed and shipped user-facing features using modern JavaScript frameworks. Built reusable components and front-end libraries for future use.",
-    technologies: ["Vue.js", "JavaScript", "SCSS", "GraphQL"],
-    link: "#"
-  },
-  {
-    period: "2019 — 2021",
-    title: "Web Developer",
-    company: "DigitalAgency",
-    description: "Collaborated with designers to create responsive and accessible websites. Optimized applications for maximum speed and scalability.",
-    technologies: ["HTML", "CSS", "JavaScript", "WordPress"],
-    link: "#"
+    period: "Jun 2022 — Aug 2022",
+    title: "Internship",
+    company: "Crupee Software Development",
+    location: "Kathmandu, Nepal",
+    description: [
+      "Acquired knowledge in multiple web development technologies, concentrating on Node.js, Express, and MongoDB for implementing a data collection system",
+      "Implemented Web API for all the CRUD functionality of the application with HTTP verbs and Custom Routing for web API endpoints"
+    ],
+    technologies: ["Node.js", "Express", "MongoDB", "REST APIs"],
   }
 ]
 
+const education = {
+  institution: "Advanced College of Engineering & Management",
+  university: "Tribhuvan University, Nepal",
+  degree: "Bachelor of Engineering in Computer Engineering",
+  graduated: "July 2022",
+  percentage: "76.39/100"
+}
+
 const projects = [
   {
-    title: "Project Alpha",
-    description: "A comprehensive design system built with React and TypeScript. Features 50+ accessible components with full dark mode support.",
-    technologies: ["React", "TypeScript", "Storybook", "Testing Library"],
-    link: "#",
+    title: "Blog Website",
+    description: "A blog web app developed using Django and Python with user account registration, login, updating posts, deleting and viewing all posts.",
+    technologies: ["Python", "Django"],
+    period: "Sep 2022 - Nov 2022",
+    type: "Personal Project",
     image: "/images/computer-setup.jpg"
   },
   {
-    title: "Project Beta",
-    description: "Real-time collaboration platform enabling teams to work together seamlessly. Built with modern web technologies.",
-    technologies: ["Next.js", "WebSockets", "PostgreSQL", "Redis"],
-    link: "#",
-    image: "/images/code-screen.jpg"
+    title: "Realistic Rendering System using GAN",
+    description: "This system can render any greyscale video and images. Its conference paper was published at SET Conference.",
+    technologies: ["Deep Learning", "Image Processing", "Computer Vision", "AI"],
+    period: "Apr 2021 - Apr 2022",
+    type: "Team of 4",
+    image: "/images/code-screen.jpg",
+    published: true
   },
   {
-    title: "Project Gamma",
-    description: "AI-powered analytics dashboard providing insights and predictions. Features interactive charts and data visualizations.",
-    technologies: ["Python", "TensorFlow", "D3.js", "FastAPI"],
-    link: "#",
+    title: "Automatic HTML Code Generation using LSTM and CNN",
+    description: "This system can recreate a website from the hand-drawn wireframe by generating the HTML tags automatically. Selected for poster presentation at SET Conference.",
+    technologies: ["Image Processing", "Computer Vision", "LSTM", "CNN"],
+    period: "Sep 2020 - Mar 2021",
+    type: "Team of 4",
     image: "/images/tech-abstract.jpg"
   }
 ]
 
 const skills = [
-  { category: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Vue.js"] },
-  { category: "Backend", items: ["Node.js", "Python", "PostgreSQL", "GraphQL", "REST APIs"] },
-  { category: "Tools", items: ["Git", "Docker", "Figma", "VS Code", "CI/CD"] },
+  { category: "Languages", items: ["JavaScript (Node.js)", "TypeScript", "Python"] },
+  { category: "Frameworks", items: ["Express.js", "NestJS", "Django", "TensorFlow", "Keras"] },
+  { category: "Databases", items: ["PostgreSQL", "MySQL", "MongoDB", "SQLite", "Redis"] },
+  { category: "Tools", items: ["Git", "Docker", "Azure", "JIRA", "Linux", "VSCode"] },
+  { category: "Concepts", items: ["REST APIs", "Microservices", "JWT Auth", "System Design", "Agile/Scrum"] },
 ]
+
+const publication = {
+  authors: "Sah, R.R., Kafle, S., Timalsina, S., Thapa, U., and Dahal, S.",
+  title: "REALISTIC RENDERING SYSTEM USING GAN",
+  conference: "The 3rd Science Engineering and Technology Conference (SET-2021)",
+  location: "Kathmandu, Nepal"
+}
 
 const navItems = ["About", "Skills", "Experience", "Projects", "Contact"]
 
@@ -129,7 +150,7 @@ export default function Portfolio() {
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <a href="/" className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-              AR
+              RRS
             </a>
             <ul className="hidden md:flex items-center gap-8">
               {navItems.map((item) => (
@@ -147,10 +168,10 @@ export default function Portfolio() {
               ))}
             </ul>
             <div className="flex items-center gap-4">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://github.com/f9rajiv" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Github className="h-5 w-5" />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://linkedin.com/in/rajivranjansah1" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Linkedin className="h-5 w-5" />
               </a>
             </div>
@@ -170,7 +191,7 @@ export default function Portfolio() {
                 <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden ring-4 ring-primary/30 ring-offset-4 ring-offset-background">
                   <Image
                     src="/images/computer-setup.jpg"
-                    alt="Alex Rivera"
+                    alt="Rajiv Ranjan Sah"
                     width={224}
                     height={224}
                     className="object-cover w-full h-full"
@@ -188,24 +209,23 @@ export default function Portfolio() {
                 Hello, I&apos;m
               </p>
               <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-                Alex Rivera
+                Rajiv Ranjan Sah
               </h1>
               <h2 className="text-xl md:text-2xl text-primary font-medium mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
-                Senior Frontend Engineer
+                Software Developer, Backend
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
-                I build accessible, pixel-perfect digital experiences for the web. 
-                Passionate about crafting interfaces that blend thoughtful design with robust engineering.
+                Building scalable microservices and optimizing database systems. Experienced in Node.js, Express, PostgreSQL, and cloud technologies with a passion for clean, efficient code.
               </p>
               
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="h-4 w-4 text-primary" />
-                  <span className="text-sm">San Francisco, CA</span>
+                  <span className="text-sm">Kathmandu, Nepal</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Mail className="h-4 w-4 text-primary" />
-                  <span className="text-sm">hello@alexrivera.dev</span>
+                  <span className="text-sm">f9rajiv@gmail.com</span>
                 </div>
               </div>
               
@@ -223,6 +243,24 @@ export default function Portfolio() {
             </div>
           </div>
           
+          {/* Education Card */}
+          <div className="mt-16 p-6 bg-card rounded-xl border border-border animate-in fade-in slide-in-from-bottom-6 duration-500 delay-600">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-primary/10 rounded-lg">
+                <BookOpen className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">{education.degree}</h3>
+                <p className="text-primary font-medium">{education.institution}</p>
+                <p className="text-muted-foreground text-sm">{education.university}</p>
+                <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
+                  <span>Graduated: {education.graduated}</span>
+                  <span>Score: {education.percentage}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           {/* Scroll indicator */}
           <div className="flex justify-center mt-16 animate-bounce">
             <button onClick={() => scrollToSection("skills")} className="text-muted-foreground hover:text-primary transition-colors">
@@ -234,9 +272,9 @@ export default function Portfolio() {
         {/* Skills Section */}
         <section id="skills" className="py-20 border-t border-border">
           <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-            Skills & Expertise
+            Technical Skills
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {skills.map((skillGroup, index) => (
               <div 
                 key={skillGroup.category}
@@ -268,37 +306,40 @@ export default function Portfolio() {
           </h2>
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-1/2" />
+            <div className="absolute left-4 top-0 bottom-0 w-px bg-border" />
             
             {experiences.map((exp, index) => (
               <div 
                 key={index}
-                className={cn(
-                  "relative grid md:grid-cols-2 gap-8 mb-12 animate-in fade-in duration-500",
-                  index % 2 === 0 ? "md:text-right" : ""
-                )}
+                className="relative pl-12 mb-12 animate-in fade-in duration-500"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
                 {/* Timeline dot */}
-                <div className="absolute left-0 md:left-1/2 top-0 w-4 h-4 bg-primary rounded-full border-4 border-background md:-translate-x-1/2 z-10" />
+                <div className="absolute left-2 top-0 w-5 h-5 bg-primary rounded-full border-4 border-background z-10" />
                 
                 {/* Content */}
-                <div className={cn(
-                  "ml-8 md:ml-0",
-                  index % 2 === 0 ? "md:pr-12" : "md:col-start-2 md:pl-12"
-                )}>
-                  <span className="text-sm text-primary font-medium">{exp.period}</span>
-                  <h3 className="text-lg font-semibold text-foreground mt-1">
-                    {exp.title}
-                  </h3>
-                  <p className="text-muted-foreground font-medium">{exp.company}</p>
-                  <p className="text-muted-foreground text-sm mt-2 leading-relaxed">
-                    {exp.description}
-                  </p>
-                  <div className={cn(
-                    "flex flex-wrap gap-2 mt-3",
-                    index % 2 === 0 ? "md:justify-end" : ""
-                  )}>
+                <div className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-all duration-300">
+                  <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground">
+                        {exp.title}
+                      </h3>
+                      <p className="text-primary font-medium">{exp.company}</p>
+                    </div>
+                    <span className="text-sm text-muted-foreground bg-secondary px-3 py-1 rounded-full">{exp.period}</span>
+                  </div>
+                  <p className="text-muted-foreground text-sm mb-4">{exp.location}</p>
+                  
+                  <ul className="space-y-2 mb-4">
+                    {exp.description.map((item, i) => (
+                      <li key={i} className="text-muted-foreground text-sm leading-relaxed flex gap-2">
+                        <span className="text-primary mt-1.5 shrink-0">&#8226;</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <div className="flex flex-wrap gap-2">
                     {exp.technologies.map((tech) => (
                       <Badge key={tech} variant="outline" className="text-xs">
                         {tech}
@@ -314,13 +355,12 @@ export default function Portfolio() {
         {/* Projects Section */}
         <section id="projects" className="py-20 border-t border-border">
           <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-            Featured Projects
+            Projects
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {projects.map((project, index) => (
-              <a
+              <div
                 key={index}
-                href={project.link}
                 className="group bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-6 duration-500"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
@@ -332,13 +372,22 @@ export default function Portfolio() {
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60" />
+                  {project.published && (
+                    <div className="absolute top-3 right-3">
+                      <Badge className="bg-primary text-primary-foreground">Published</Badge>
+                    </div>
+                  )}
                 </div>
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-start justify-between gap-2 mb-2">
                     <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
-                    <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-all group-hover:-translate-y-1 group-hover:translate-x-1" />
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                    <span>{project.period}</span>
+                    <span>&#8226;</span>
+                    <span>{project.type}</span>
                   </div>
                   <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
                     {project.description}
@@ -351,8 +400,16 @@ export default function Portfolio() {
                     ))}
                   </div>
                 </div>
-              </a>
+              </div>
             ))}
+          </div>
+
+          {/* Publication */}
+          <div className="mt-12 p-6 bg-card rounded-xl border border-border animate-in fade-in slide-in-from-bottom-6 duration-500">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Publication</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              <span className="text-foreground">{publication.authors}</span>, &quot;{publication.title}&quot;, <em>{publication.conference}</em>, {publication.location}.
+            </p>
           </div>
         </section>
 
@@ -371,23 +428,23 @@ export default function Portfolio() {
               <h3 className="text-lg font-semibold text-foreground">Contact Information</h3>
               
               <div className="space-y-4">
-                <a href="mailto:hello@alexrivera.dev" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
+                <a href="mailto:f9rajiv@gmail.com" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
                   <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
                     <Mail className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="text-foreground font-medium">hello@alexrivera.dev</p>
+                    <p className="text-foreground font-medium">f9rajiv@gmail.com</p>
                   </div>
                 </a>
                 
-                <a href="tel:+1234567890" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
+                <a href="tel:+9779813736603" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
                   <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Phone</p>
-                    <p className="text-foreground font-medium">+1 (234) 567-890</p>
+                    <p className="text-foreground font-medium">+977 9813736603</p>
                   </div>
                 </a>
                 
@@ -397,7 +454,7 @@ export default function Portfolio() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Location</p>
-                    <p className="text-foreground font-medium">San Francisco, CA</p>
+                    <p className="text-foreground font-medium">Kathmandu, Nepal</p>
                   </div>
                 </div>
               </div>
@@ -407,9 +464,8 @@ export default function Portfolio() {
                 <h4 className="text-sm font-medium text-muted-foreground mb-4">Find me on</h4>
                 <div className="flex items-center gap-4">
                   {[
-                    { href: "https://github.com", icon: Github, label: "GitHub" },
-                    { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
-                    { href: "https://twitter.com", icon: Twitter, label: "Twitter" },
+                    { href: "https://github.com/f9rajiv", icon: Github, label: "GitHub" },
+                    { href: "https://linkedin.com/in/rajivranjansah1", icon: Linkedin, label: "LinkedIn" },
                   ].map((social) => (
                     <a
                       key={social.label}
@@ -428,32 +484,25 @@ export default function Portfolio() {
             
             {/* Contact Form */}
             <div className="animate-in fade-in slide-in-from-right-6 duration-500 delay-300">
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              <h3 className="text-lg font-semibold text-foreground mb-6">Send a Message</h3>
+              <form className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="name" className="text-sm font-medium text-foreground mb-2 block">
-                      Name
-                    </label>
-                    <Input id="name" placeholder="Your name" />
+                    <label htmlFor="name" className="text-sm text-muted-foreground mb-2 block">Name</label>
+                    <Input id="name" placeholder="Your name" className="bg-card" />
                   </div>
                   <div>
-                    <label htmlFor="email" className="text-sm font-medium text-foreground mb-2 block">
-                      Email
-                    </label>
-                    <Input id="email" type="email" placeholder="your@email.com" />
+                    <label htmlFor="email" className="text-sm text-muted-foreground mb-2 block">Email</label>
+                    <Input id="email" type="email" placeholder="your@email.com" className="bg-card" />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="subject" className="text-sm font-medium text-foreground mb-2 block">
-                    Subject
-                  </label>
-                  <Input id="subject" placeholder="How can I help you?" />
+                  <label htmlFor="subject" className="text-sm text-muted-foreground mb-2 block">Subject</label>
+                  <Input id="subject" placeholder="What's this about?" className="bg-card" />
                 </div>
                 <div>
-                  <label htmlFor="message" className="text-sm font-medium text-foreground mb-2 block">
-                    Message
-                  </label>
-                  <Textarea id="message" placeholder="Your message..." rows={5} />
+                  <label htmlFor="message" className="text-sm text-muted-foreground mb-2 block">Message</label>
+                  <Textarea id="message" placeholder="Your message..." rows={5} className="bg-card resize-none" />
                 </div>
                 <Button type="submit" className="w-full gap-2">
                   <Send className="h-4 w-4" />
@@ -467,22 +516,7 @@ export default function Portfolio() {
         {/* Footer */}
         <footer className="py-8 border-t border-border text-center">
           <p className="text-sm text-muted-foreground">
-            Built with{" "}
-            <a href="https://nextjs.org" className="text-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
-              Next.js
-            </a>{" "}
-            &{" "}
-            <a href="https://tailwindcss.com" className="text-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
-              Tailwind CSS
-            </a>
-            . Hosted on{" "}
-            <a href="https://pages.github.com" className="text-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
-              GitHub Pages
-            </a>
-            .
-          </p>
-          <p className="text-sm text-muted-foreground mt-2">
-            &copy; {new Date().getFullYear()} Alex Rivera. All rights reserved.
+            &copy; {new Date().getFullYear()} Rajiv Ranjan Sah. All rights reserved.
           </p>
         </footer>
       </main>
