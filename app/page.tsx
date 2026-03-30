@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Github, Linkedin, Mail, ExternalLink, ArrowDown, MapPin, Phone, Send, BookOpen } from "lucide-react"
+import { Github, Linkedin, Mail, ExternalLink, ArrowDown, MapPin, Phone, Send, BookOpen, Brain, Sparkles, Cpu, Zap, Code2, Database, Server, Cloud } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -211,11 +211,21 @@ export default function Portfolio() {
               <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
                 Rajiv Ranjan Sah
               </h1>
-              <h2 className="text-xl md:text-2xl text-primary font-medium mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+              <h2 className="text-xl md:text-2xl text-primary font-medium mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
                 Software Developer, Backend
               </h2>
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-250">
+                <Badge className="bg-gradient-to-r from-cyan-500/20 to-primary/20 text-primary border border-primary/30 gap-1">
+                  <Brain className="h-3 w-3" />
+                  AI Enthusiast
+                </Badge>
+                <Badge variant="outline" className="border-muted-foreground/30 text-muted-foreground gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  Deep Learning
+                </Badge>
+              </div>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
-                Building scalable microservices and optimizing database systems. Experienced in Node.js, Express, PostgreSQL, and cloud technologies with a passion for clean, efficient code.
+                Building scalable microservices and optimizing database systems. Passionate about AI/ML with published research in GANs and computer vision. Experienced in Node.js, Express, PostgreSQL, and cloud technologies.
               </p>
               
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
@@ -299,52 +309,152 @@ export default function Portfolio() {
           </div>
         </section>
 
+        {/* AI Enthusiast Section */}
+        <section className="py-20 border-t border-border">
+          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-primary/10 text-primary text-sm font-medium mb-4">
+              <Brain className="h-4 w-4" />
+              Passion for Innovation
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              AI Enthusiast
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Exploring the frontiers of artificial intelligence with hands-on experience in deep learning, computer vision, and generative models.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Brain,
+                title: "Deep Learning",
+                description: "Experience with TensorFlow and Keras for building neural networks including GANs, CNNs, and LSTMs",
+                gradient: "from-purple-500/20 to-primary/20"
+              },
+              {
+                icon: Cpu,
+                title: "Computer Vision",
+                description: "Published research on realistic rendering using GANs and automatic HTML generation from wireframes",
+                gradient: "from-cyan-500/20 to-blue-500/20"
+              },
+              {
+                icon: Sparkles,
+                title: "Generative AI",
+                description: "Passionate about exploring LLMs, image generation, and the future of AI-powered applications",
+                gradient: "from-primary/20 to-teal-500/20"
+              }
+            ].map((item, index) => (
+              <div
+                key={item.title}
+                className="group relative bg-card rounded-2xl p-6 border border-border hover:border-primary/50 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2 overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-500"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {/* Gradient background on hover */}
+                <div className={cn(
+                  "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500",
+                  item.gradient
+                )} />
+                
+                <div className="relative z-10">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-cyan-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <item.icon className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Experience Section */}
         <section id="experience" className="py-20 border-t border-border">
-          <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-            Work Experience
-          </h2>
+          <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              <Zap className="h-4 w-4" />
+              Professional Journey
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+              Work Experience
+            </h2>
+          </div>
+          
           <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-4 top-0 bottom-0 w-px bg-border" />
+            {/* Animated gradient timeline line */}
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-cyan-500 to-primary/20" />
             
             {experiences.map((exp, index) => (
               <div 
                 key={index}
-                className="relative pl-12 mb-12 animate-in fade-in duration-500"
-                style={{ animationDelay: `${index * 150}ms` }}
+                className={cn(
+                  "relative mb-16 animate-in fade-in duration-700",
+                  index % 2 === 0 ? "md:pr-[52%]" : "md:pl-[52%] md:text-left"
+                )}
+                style={{ animationDelay: `${index * 200}ms` }}
               >
-                {/* Timeline dot */}
-                <div className="absolute left-2 top-0 w-5 h-5 bg-primary rounded-full border-4 border-background z-10" />
-                
-                {/* Content */}
-                <div className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-all duration-300">
-                  <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">
-                        {exp.title}
-                      </h3>
-                      <p className="text-primary font-medium">{exp.company}</p>
-                    </div>
-                    <span className="text-sm text-muted-foreground bg-secondary px-3 py-1 rounded-full">{exp.period}</span>
+                {/* Timeline node with pulse effect */}
+                <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 z-20">
+                  <div className="relative">
+                    <div className="w-5 h-5 bg-primary rounded-full border-4 border-background shadow-lg shadow-primary/30" />
+                    <div className="absolute inset-0 w-5 h-5 bg-primary rounded-full animate-ping opacity-30" />
                   </div>
-                  <p className="text-muted-foreground text-sm mb-4">{exp.location}</p>
-                  
-                  <ul className="space-y-2 mb-4">
-                    {exp.description.map((item, i) => (
-                      <li key={i} className="text-muted-foreground text-sm leading-relaxed flex gap-2">
-                        <span className="text-primary mt-1.5 shrink-0">&#8226;</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {exp.technologies.map((tech) => (
-                      <Badge key={tech} variant="outline" className="text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
+                </div>
+                
+                {/* Content card */}
+                <div className={cn(
+                  "ml-14 md:ml-0 group",
+                  index % 2 === 0 ? "md:mr-8" : "md:ml-8"
+                )}>
+                  <div className="relative bg-card rounded-2xl p-6 border border-border hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 overflow-hidden">
+                    {/* Decorative gradient blob */}
+                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-primary/20 to-cyan-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    {/* Period badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-cyan-500/10 border border-primary/20 text-sm text-primary font-medium mb-4">
+                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                      {exp.period}
+                    </div>
+                    
+                    {/* Title and company */}
+                    <h3 className="text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                      {exp.title}
+                    </h3>
+                    <p className="text-primary font-semibold mb-1">{exp.company}</p>
+                    <div className="flex items-center gap-1 text-muted-foreground text-sm mb-5">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {exp.location}
+                    </div>
+                    
+                    {/* Description with styled bullets */}
+                    <ul className="space-y-3 mb-5">
+                      {exp.description.map((item, i) => (
+                        <li key={i} className="flex gap-3 group/item">
+                          <span className="mt-2 shrink-0 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-primary to-cyan-500" />
+                          <span className="text-muted-foreground text-sm leading-relaxed group-hover/item:text-foreground transition-colors">
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    {/* Tech stack with icons */}
+                    <div className="flex flex-wrap gap-2 pt-4 border-t border-border/50">
+                      {exp.technologies.map((tech, i) => (
+                        <Badge 
+                          key={tech} 
+                          variant="secondary" 
+                          className="bg-gradient-to-r from-secondary to-secondary/50 hover:from-primary/20 hover:to-cyan-500/20 transition-all duration-300 text-xs font-medium"
+                          style={{ animationDelay: `${i * 50}ms` }}
+                        >
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
