@@ -1,8 +1,11 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Github, Linkedin, Twitter, Mail, ExternalLink, ArrowUpRight } from "lucide-react"
+import { Github, Linkedin, Twitter, Mail, ExternalLink, ArrowDown, MapPin, Phone, Send } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
@@ -57,53 +60,13 @@ const projects = [
   }
 ]
 
-const navItems = ["About", "Experience", "Projects"]
+const skills = [
+  { category: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Vue.js"] },
+  { category: "Backend", items: ["Node.js", "Python", "PostgreSQL", "GraphQL", "REST APIs"] },
+  { category: "Tools", items: ["Git", "Docker", "Figma", "VS Code", "CI/CD"] },
+]
 
-// Floating animated images component
-function FloatingImages() {
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {/* Image 1 - Top right */}
-      <div className="absolute -top-10 -right-20 w-80 h-60 opacity-20 animate-float-slow">
-        <div className="relative w-full h-full rounded-2xl overflow-hidden rotate-12 shadow-2xl shadow-primary/20">
-          <Image
-            src="/images/computer-setup.jpg"
-            alt=""
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent mix-blend-overlay" />
-        </div>
-      </div>
-      
-      {/* Image 2 - Bottom left */}
-      <div className="absolute bottom-20 -left-16 w-72 h-48 opacity-15 animate-float-medium">
-        <div className="relative w-full h-full rounded-2xl overflow-hidden -rotate-6 shadow-2xl shadow-cyan-500/20">
-          <Image
-            src="/images/code-screen.jpg"
-            alt=""
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/30 to-transparent mix-blend-overlay" />
-        </div>
-      </div>
-      
-      {/* Image 3 - Center right */}
-      <div className="absolute top-1/2 -right-10 w-64 h-44 opacity-10 animate-float-fast">
-        <div className="relative w-full h-full rounded-2xl overflow-hidden rotate-3 shadow-2xl shadow-teal-500/20">
-          <Image
-            src="/images/tech-abstract.jpg"
-            alt=""
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-bl from-teal-500/30 to-transparent mix-blend-overlay" />
-        </div>
-      </div>
-    </div>
-  )
-}
+const navItems = ["About", "Skills", "Experience", "Projects", "Contact"]
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("About")
@@ -146,9 +109,6 @@ export default function Portfolio() {
 
   return (
     <div ref={containerRef} className="relative min-h-screen bg-background">
-      {/* Floating background images */}
-      <FloatingImages />
-      
       {/* Animated gradient orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse-slow" />
@@ -160,386 +120,372 @@ export default function Portfolio() {
       <div
         className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"
         style={{
-          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.08), transparent 80%)`,
+          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.06), transparent 80%)`,
         }}
       />
 
-      <div className="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
-        <div className="lg:flex lg:justify-between lg:gap-4">
-          {/* Left column - Fixed header */}
-          <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-24">
-            <div>
-              {/* Animated avatar */}
-              <div className="mb-6 animate-in fade-in zoom-in duration-700">
-                <div className="relative w-24 h-24 rounded-full overflow-hidden ring-2 ring-primary/50 ring-offset-4 ring-offset-background group">
-                  <Image
-                    src="/images/computer-setup.jpg"
-                    alt="Profile"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
-              </div>
-              
-              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <span className="inline-block hover:text-primary transition-colors duration-300">
-                  <a href="/">Alex Rivera</a>
-                </span>
-              </h1>
-              <h2 className="mt-3 text-lg font-medium tracking-tight text-primary sm:text-xl animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-                <span className="inline-block animate-text-shimmer bg-clip-text">
-                  Senior Frontend Engineer
-                </span>
-              </h2>
-              <p className="mt-4 max-w-xs leading-relaxed text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-                I build accessible, pixel-perfect digital experiences for the web.
-              </p>
-
-              {/* Navigation */}
-              <nav className="nav hidden lg:block mt-16 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-                <ul className="w-max">
-                  {navItems.map((item, index) => (
-                    <li key={item} style={{ animationDelay: `${300 + index * 50}ms` }} className="animate-in fade-in slide-in-from-left-4">
-                      <button
-                        onClick={() => scrollToSection(item)}
-                        className={cn(
-                          "group flex items-center py-3 transition-all duration-300",
-                          activeSection === item ? "text-foreground" : "text-muted-foreground"
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "mr-4 h-px transition-all duration-300 group-hover:w-16 group-hover:bg-primary",
-                            activeSection === item ? "w-16 bg-primary" : "w-8 bg-muted-foreground"
-                          )}
-                        />
-                        <span className="text-xs font-bold uppercase tracking-widest group-hover:text-primary transition-colors">
-                          {item}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-
-            {/* Social links */}
-            <ul className="ml-1 mt-8 flex items-center gap-5 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
-              {[
-                { href: "https://github.com", icon: Github, label: "GitHub" },
-                { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
-                { href: "https://twitter.com", icon: Twitter, label: "Twitter" },
-                { href: "mailto:hello@example.com", icon: Mail, label: "Email" }
-              ].map((social, index) => (
-                <li key={social.label} style={{ animationDelay: `${500 + index * 100}ms` }} className="animate-in fade-in zoom-in">
-                  <a
-                    href={social.href}
-                    target={social.href.startsWith("mailto") ? undefined : "_blank"}
-                    rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-                    className="block text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 hover:-translate-y-1"
-                    aria-label={social.label}
+      {/* Fixed Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <a href="/" className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+              AR
+            </a>
+            <ul className="hidden md:flex items-center gap-8">
+              {navItems.map((item) => (
+                <li key={item}>
+                  <button
+                    onClick={() => scrollToSection(item)}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-primary",
+                      activeSection === item ? "text-primary" : "text-muted-foreground"
+                    )}
                   >
-                    <social.icon className="h-6 w-6" />
-                  </a>
+                    {item}
+                  </button>
                 </li>
               ))}
             </ul>
-          </header>
-
-          {/* Right column - Main content */}
-          <main className="pt-24 lg:w-1/2 lg:py-24">
-            {/* About section */}
-            <section
-              id="about"
-              className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200"
-            >
-              <div className="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-background/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-foreground lg:sr-only">
-                  About
-                </h2>
-              </div>
-              
-              {/* Featured image in about section */}
-              <div className="mb-8 relative group overflow-hidden rounded-xl">
-                <div className="aspect-video relative">
-                  <Image
-                    src="/images/tech-abstract.jpg"
-                    alt="Tech workspace"
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <p className="text-sm text-foreground/80 font-medium">Building the future, one line of code at a time</p>
-                </div>
-              </div>
-              
-              <div className="space-y-4 text-muted-foreground">
-                <p className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: "100ms" }}>
-                  I&apos;m a developer passionate about crafting accessible, pixel-perfect user
-                  interfaces that blend thoughtful design with robust engineering. My favorite
-                  work lies at the intersection of design and development, creating experiences
-                  that not only look great but are meticulously built for performance and usability.
-                </p>
-                <p className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: "200ms" }}>
-                  Currently, I&apos;m a Senior Front-End Engineer at{" "}
-                  <a href="#" className="font-medium text-foreground hover:text-primary transition-colors underline-offset-4 hover:underline">
-                    TechCorp
-                  </a>
-                  , specializing in accessibility. I contribute to the creation and maintenance
-                  of UI components that power the frontend, ensuring our platform meets web
-                  accessibility standards and best practices.
-                </p>
-                <p className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: "300ms" }}>
-                  In my spare time, I&apos;m usually exploring new technologies, contributing to
-                  open-source projects, or working on personal side projects that push my
-                  boundaries as a developer.
-                </p>
-              </div>
-            </section>
-
-            {/* Experience section */}
-            <section
-              id="experience"
-              className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
-            >
-              <div className="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-background/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-foreground lg:sr-only">
-                  Experience
-                </h2>
-              </div>
-              <div>
-                <ol className="group/list">
-                  {experiences.map((exp, index) => (
-                    <li
-                      key={index}
-                      className="mb-12 animate-in fade-in slide-in-from-bottom-6 duration-500"
-                      style={{ animationDelay: `${300 + index * 100}ms` }}
-                    >
-                      <ExperienceCard {...exp} />
-                    </li>
-                  ))}
-                </ol>
-                <div className="mt-12">
-                  <a
-                    href="/resume.pdf"
-                    className="group inline-flex items-center font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    View Full Resume
-                    <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-                  </a>
-                </div>
-              </div>
-            </section>
-
-            {/* Projects section */}
-            <section
-              id="projects"
-              className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
-            >
-              <div className="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-background/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-foreground lg:sr-only">
-                  Projects
-                </h2>
-              </div>
-              <div>
-                <ul className="group/list">
-                  {projects.map((project, index) => (
-                    <li
-                      key={index}
-                      className="mb-12 animate-in fade-in slide-in-from-bottom-6 duration-500"
-                      style={{ animationDelay: `${400 + index * 100}ms` }}
-                    >
-                      <ProjectCard {...project} />
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-12">
-                  <a
-                    href="#"
-                    className="group inline-flex items-center font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    View All Projects
-                    <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-                  </a>
-                </div>
-              </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="max-w-md pb-16 text-sm text-muted-foreground sm:pb-0">
-              <p>
-                Loosely designed in{" "}
-                <a
-                  href="https://figma.com"
-                  className="font-medium text-foreground hover:text-primary transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Figma
-                </a>{" "}
-                and coded in{" "}
-                <a
-                  href="https://code.visualstudio.com/"
-                  className="font-medium text-foreground hover:text-primary transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Visual Studio Code
-                </a>
-                . Built with{" "}
-                <a
-                  href="https://nextjs.org/"
-                  className="font-medium text-foreground hover:text-primary transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Next.js
-                </a>{" "}
-                and{" "}
-                <a
-                  href="https://tailwindcss.com/"
-                  className="font-medium text-foreground hover:text-primary transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Tailwind CSS
-                </a>
-                , deployed with{" "}
-                <a
-                  href="https://vercel.com/"
-                  className="font-medium text-foreground hover:text-primary transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Vercel
-                </a>
-                .
-              </p>
-            </footer>
-          </main>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function ExperienceCard({
-  period,
-  title,
-  company,
-  description,
-  technologies,
-  link
-}: {
-  period: string
-  title: string
-  company: string
-  description: string
-  technologies: string[]
-  link: string
-}) {
-  return (
-    <div className="group relative grid pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-      <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition-all duration-300 motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-secondary/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg lg:group-hover:scale-[1.02]" />
-      
-      <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:col-span-2">
-        {period}
-      </header>
-      
-      <div className="z-10 sm:col-span-6">
-        <h3 className="font-medium leading-snug text-foreground">
-          <div>
-            <a
-              href={link}
-              className="group/link inline-flex items-baseline text-base font-medium leading-tight text-foreground hover:text-primary focus-visible:text-primary transition-colors"
-            >
-              <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block" />
-              <span>
-                {title} ·{" "}
-                <span className="inline-block">
-                  {company}
-                  <ExternalLink className="ml-1 inline-block h-4 w-4 shrink-0 translate-y-px transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none" />
-                </span>
-              </span>
-            </a>
+            <div className="flex items-center gap-4">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Github className="h-5 w-5" />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
           </div>
-        </h3>
-        <p className="mt-2 text-sm leading-normal text-muted-foreground">
-          {description}
-        </p>
-        <ul className="mt-2 flex flex-wrap gap-2">
-          {technologies.map((tech, i) => (
-            <li key={tech} className="animate-in fade-in zoom-in" style={{ animationDelay: `${i * 50}ms` }}>
-              <Badge variant="secondary" className="rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-medium transition-all hover:bg-primary/20 hover:scale-105">
-                {tech}
-              </Badge>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
-
-function ProjectCard({
-  title,
-  description,
-  technologies,
-  link,
-  image
-}: {
-  title: string
-  description: string
-  technologies: string[]
-  link: string
-  image: string
-}) {
-  return (
-    <div className="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-      <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition-all duration-300 motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-secondary/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg lg:group-hover:scale-[1.02]" />
-      
-      <div className="z-10 sm:order-2 sm:col-span-6">
-        <h3>
-          <a
-            href={link}
-            className="group/link inline-flex items-baseline text-base font-medium leading-tight text-foreground hover:text-primary focus-visible:text-primary transition-colors"
-          >
-            <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block" />
-            <span>
-              {title}
-              <ExternalLink className="ml-1 inline-block h-4 w-4 shrink-0 translate-y-px transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none" />
-            </span>
-          </a>
-        </h3>
-        <p className="mt-2 text-sm leading-normal text-muted-foreground">
-          {description}
-        </p>
-        <ul className="mt-2 flex flex-wrap gap-2">
-          {technologies.map((tech, i) => (
-            <li key={tech} className="animate-in fade-in zoom-in" style={{ animationDelay: `${i * 50}ms` }}>
-              <Badge variant="secondary" className="rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-medium transition-all hover:bg-primary/20 hover:scale-105">
-                {tech}
-              </Badge>
-            </li>
-          ))}
-        </ul>
-      </div>
-      
-      <div className="z-10 sm:order-1 sm:col-span-2">
-        <div className="relative aspect-video rounded-lg border-2 border-border overflow-hidden transition-all duration-300 group-hover:border-primary/50 group-hover:shadow-lg group-hover:shadow-primary/10">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
-      </div>
+      </nav>
+
+      {/* Main Content - Single Column CV Style */}
+      <main className="relative z-10 max-w-4xl mx-auto px-6 pt-24">
+        
+        {/* Hero Section */}
+        <section id="about" className="min-h-screen flex flex-col justify-center py-20">
+          <div className="grid md:grid-cols-3 gap-12 items-center">
+            {/* Profile Image */}
+            <div className="md:col-span-1 flex justify-center animate-in fade-in zoom-in duration-700">
+              <div className="relative">
+                <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden ring-4 ring-primary/30 ring-offset-4 ring-offset-background">
+                  <Image
+                    src="/images/computer-setup.jpg"
+                    alt="Alex Rivera"
+                    width={224}
+                    height={224}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-3 shadow-lg">
+                  <Send className="h-5 w-5" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Hero Text */}
+            <div className="md:col-span-2 text-center md:text-left">
+              <p className="text-primary font-medium mb-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                Hello, I&apos;m
+              </p>
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+                Alex Rivera
+              </h1>
+              <h2 className="text-xl md:text-2xl text-primary font-medium mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+                Senior Frontend Engineer
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-8 max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
+                I build accessible, pixel-perfect digital experiences for the web. 
+                Passionate about crafting interfaces that blend thoughtful design with robust engineering.
+              </p>
+              
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="text-sm">San Francisco, CA</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Mail className="h-4 w-4 text-primary" />
+                  <span className="text-sm">hello@alexrivera.dev</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
+                <Button onClick={() => scrollToSection("contact")} className="gap-2">
+                  <Mail className="h-4 w-4" />
+                  Get In Touch
+                </Button>
+                <Button variant="outline" asChild>
+                  <a href="/resume.pdf" download>
+                    Download CV
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Scroll indicator */}
+          <div className="flex justify-center mt-16 animate-bounce">
+            <button onClick={() => scrollToSection("skills")} className="text-muted-foreground hover:text-primary transition-colors">
+              <ArrowDown className="h-6 w-6" />
+            </button>
+          </div>
+        </section>
+
+        {/* Skills Section */}
+        <section id="skills" className="py-20 border-t border-border">
+          <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+            Skills & Expertise
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {skills.map((skillGroup, index) => (
+              <div 
+                key={skillGroup.category}
+                className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-6 duration-500"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <h3 className="text-lg font-semibold text-foreground mb-4">{skillGroup.category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {skillGroup.items.map((skill, i) => (
+                    <Badge 
+                      key={skill} 
+                      variant="secondary" 
+                      className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors animate-in fade-in zoom-in"
+                      style={{ animationDelay: `${(index * 100) + (i * 50)}ms` }}
+                    >
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Experience Section */}
+        <section id="experience" className="py-20 border-t border-border">
+          <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+            Work Experience
+          </h2>
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-1/2" />
+            
+            {experiences.map((exp, index) => (
+              <div 
+                key={index}
+                className={cn(
+                  "relative grid md:grid-cols-2 gap-8 mb-12 animate-in fade-in duration-500",
+                  index % 2 === 0 ? "md:text-right" : ""
+                )}
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                {/* Timeline dot */}
+                <div className="absolute left-0 md:left-1/2 top-0 w-4 h-4 bg-primary rounded-full border-4 border-background md:-translate-x-1/2 z-10" />
+                
+                {/* Content */}
+                <div className={cn(
+                  "ml-8 md:ml-0",
+                  index % 2 === 0 ? "md:pr-12" : "md:col-start-2 md:pl-12"
+                )}>
+                  <span className="text-sm text-primary font-medium">{exp.period}</span>
+                  <h3 className="text-lg font-semibold text-foreground mt-1">
+                    {exp.title}
+                  </h3>
+                  <p className="text-muted-foreground font-medium">{exp.company}</p>
+                  <p className="text-muted-foreground text-sm mt-2 leading-relaxed">
+                    {exp.description}
+                  </p>
+                  <div className={cn(
+                    "flex flex-wrap gap-2 mt-3",
+                    index % 2 === 0 ? "md:justify-end" : ""
+                  )}>
+                    {exp.technologies.map((tech) => (
+                      <Badge key={tech} variant="outline" className="text-xs">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Projects Section */}
+        <section id="projects" className="py-20 border-t border-border">
+          <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+            Featured Projects
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {projects.map((project, index) => (
+              <a
+                key={index}
+                href={project.link}
+                className="group bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-6 duration-500"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="relative aspect-video overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60" />
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-all group-hover:-translate-y-1 group-hover:translate-x-1" />
+                  </div>
+                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech) => (
+                      <Badge key={tech} variant="secondary" className="text-xs bg-primary/10 text-primary">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Contact Section */}
+        <section id="contact" className="py-20 border-t border-border">
+          <h2 className="text-2xl font-bold text-foreground mb-4 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+            Get In Touch
+          </h2>
+          <p className="text-muted-foreground text-center mb-12 max-w-lg mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+            I&apos;m currently open to new opportunities. Whether you have a question or just want to say hi, feel free to reach out!
+          </p>
+          
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Contact Info */}
+            <div className="space-y-6 animate-in fade-in slide-in-from-left-6 duration-500 delay-200">
+              <h3 className="text-lg font-semibold text-foreground">Contact Information</h3>
+              
+              <div className="space-y-4">
+                <a href="mailto:hello@alexrivera.dev" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
+                  <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                    <Mail className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <p className="text-foreground font-medium">hello@alexrivera.dev</p>
+                  </div>
+                </a>
+                
+                <a href="tel:+1234567890" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
+                  <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                    <Phone className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <p className="text-foreground font-medium">+1 (234) 567-890</p>
+                  </div>
+                </a>
+                
+                <div className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Location</p>
+                    <p className="text-foreground font-medium">San Francisco, CA</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Social Links */}
+              <div>
+                <h4 className="text-sm font-medium text-muted-foreground mb-4">Find me on</h4>
+                <div className="flex items-center gap-4">
+                  {[
+                    { href: "https://github.com", icon: Github, label: "GitHub" },
+                    { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
+                    { href: "https://twitter.com", icon: Twitter, label: "Twitter" },
+                  ].map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 bg-card rounded-lg border border-border text-muted-foreground hover:text-primary hover:border-primary/50 transition-all hover:-translate-y-1"
+                      aria-label={social.label}
+                    >
+                      <social.icon className="h-5 w-5" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Contact Form */}
+            <div className="animate-in fade-in slide-in-from-right-6 duration-500 delay-300">
+              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className="text-sm font-medium text-foreground mb-2 block">
+                      Name
+                    </label>
+                    <Input id="name" placeholder="Your name" />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="text-sm font-medium text-foreground mb-2 block">
+                      Email
+                    </label>
+                    <Input id="email" type="email" placeholder="your@email.com" />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="subject" className="text-sm font-medium text-foreground mb-2 block">
+                    Subject
+                  </label>
+                  <Input id="subject" placeholder="How can I help you?" />
+                </div>
+                <div>
+                  <label htmlFor="message" className="text-sm font-medium text-foreground mb-2 block">
+                    Message
+                  </label>
+                  <Textarea id="message" placeholder="Your message..." rows={5} />
+                </div>
+                <Button type="submit" className="w-full gap-2">
+                  <Send className="h-4 w-4" />
+                  Send Message
+                </Button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-8 border-t border-border text-center">
+          <p className="text-sm text-muted-foreground">
+            Built with{" "}
+            <a href="https://nextjs.org" className="text-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
+              Next.js
+            </a>{" "}
+            &{" "}
+            <a href="https://tailwindcss.com" className="text-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
+              Tailwind CSS
+            </a>
+            . Hosted on{" "}
+            <a href="https://pages.github.com" className="text-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
+              GitHub Pages
+            </a>
+            .
+          </p>
+          <p className="text-sm text-muted-foreground mt-2">
+            &copy; {new Date().getFullYear()} Alex Rivera. All rights reserved.
+          </p>
+        </footer>
+      </main>
     </div>
   )
 }
