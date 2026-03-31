@@ -30,7 +30,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
+      {/* Prevent hydration warnings when browser extensions inject body attributes. */}
+      <body suppressHydrationWarning className="font-sans antialiased">
         {children}
         <Analytics />
       </body>

@@ -9,6 +9,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
+// Step 1: Read base path injected from next.config.mjs.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+// Step 2: Build URLs that work in both local and GitHub Pages environments.
+const withBasePath = (path: string) => `${BASE_PATH}${path}`
+
 const experiences = [
   {
     period: "Dec 2022 — March 2026",
@@ -39,9 +44,7 @@ const experiences = [
 const education = {
   institution: "Advanced College of Engineering & Management",
   university: "Tribhuvan University, Nepal",
-  degree: "Bachelor of Engineering in Computer Engineering",
-  graduated: "July 2022",
-  percentage: "76.39/100"
+  degree: "Bachelor of Engineering in Computer Engineering"
 }
 
 const projects = [
@@ -51,7 +54,7 @@ const projects = [
     technologies: ["Python", "Django"],
     period: "Sep 2022 - Nov 2022",
     type: "Personal Project",
-    image: "/images/computer-setup.jpg"
+    image: withBasePath("/images/computer-setup.jpg")
   },
   {
     title: "Realistic Rendering System using GAN",
@@ -59,7 +62,7 @@ const projects = [
     technologies: ["Deep Learning", "Image Processing", "Computer Vision", "AI"],
     period: "Apr 2021 - Apr 2022",
     type: "Team of 4",
-    image: "/images/code-screen.jpg",
+    image: withBasePath("/images/code-screen.jpg"),
     published: true
   },
   {
@@ -68,7 +71,7 @@ const projects = [
     technologies: ["Image Processing", "Computer Vision", "LSTM", "CNN"],
     period: "Sep 2020 - Mar 2021",
     type: "Team of 4",
-    image: "/images/tech-abstract.jpg"
+    image: withBasePath("/images/tech-abstract.jpg")
   }
 ]
 
@@ -149,7 +152,8 @@ export default function Portfolio() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <a href="/" className="text-lg font-bold text-foreground hover:text-primary transition-colors">
+            {/* Step 3: Keep home link valid for both "/" and "/myportfolio". */}
+            <a href={withBasePath("/")} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
               RRS
             </a>
             <ul className="hidden md:flex items-center gap-8">
@@ -190,7 +194,7 @@ export default function Portfolio() {
               <div className="relative">
                 <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden ring-4 ring-primary/30 ring-offset-4 ring-offset-background">
                   <Image
-                    src="/images/computer-setup.jpg"
+                    src={withBasePath("/images/computer-setup.jpg")}
                     alt="Rajiv Ranjan Sah"
                     width={224}
                     height={224}
@@ -244,11 +248,11 @@ export default function Portfolio() {
                   <Mail className="h-4 w-4" />
                   Get In Touch
                 </Button>
-                <Button variant="outline" asChild>
-                  <a href="/resume.pdf" download>
+                {/* <Button variant="outline" asChild>
+                  <a href={withBasePath("/resume.pdf")} download>
                     Download CV
                   </a>
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -263,10 +267,10 @@ export default function Portfolio() {
                 <h3 className="text-lg font-semibold text-foreground">{education.degree}</h3>
                 <p className="text-primary font-medium">{education.institution}</p>
                 <p className="text-muted-foreground text-sm">{education.university}</p>
-                <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
+                {/* <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
                   <span>Graduated: {education.graduated}</span>
                   <span>Score: {education.percentage}</span>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -548,16 +552,7 @@ export default function Portfolio() {
                   </div>
                 </a>
                 
-                <a href="tel:+9779813736603" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
-                  <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                    <Phone className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Phone</p>
-                    <p className="text-foreground font-medium">+977 9813736603</p>
-                  </div>
-                </a>
-                
+               
                 <div className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border">
                   <div className="p-3 bg-primary/10 rounded-lg">
                     <MapPin className="h-5 w-5 text-primary" />
