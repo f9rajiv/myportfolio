@@ -10,22 +10,16 @@ export const metadata: Metadata = {
   title: 'Portfolio | Creative Developer',
   description: 'Building accessible, pixel-perfect digital experiences for the web.',
   generator: 'v0.app',
+  // Use a single SVG icon that exists in /public to avoid 404s for missing PNG variants.
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
       {
         url: '/icon.svg',
         type: 'image/svg+xml',
       },
     ],
-    apple: '/apple-icon.png',
+    // Reuse the same SVG for Apple touch icon to keep things simple.
+    apple: '/icon.svg',
   },
 }
 

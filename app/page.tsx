@@ -11,7 +11,7 @@ import Image from "next/image"
 
 const experiences = [
   {
-    period: "Dec 2022 — Present",
+    period: "Dec 2022 — March 2026",
     title: "Software Developer, Backend",
     company: "IT Himalaya Pvt Ltd (Procit BV, Netherlands)",
     location: "Kathmandu, Nepal",
