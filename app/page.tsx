@@ -1,18 +1,28 @@
 "use client"
 
+import type { ChangeEvent, FormEvent } from "react"
 import { useEffect, useRef, useState } from "react"
-import { Github, Linkedin, Mail, ExternalLink, ArrowDown, MapPin, Phone, Send, BookOpen, Brain, Sparkles, Cpu, Zap, Code2, Database, Server, Cloud } from "lucide-react"
+import { Github, Linkedin, Mail, ArrowDown, MapPin, Send, BookOpen, Brain, Sparkles, Cpu, Zap } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
 // Step 1: Read base path injected from next.config.mjs.
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? ""
 // Step 2: Build URLs that work in both local and GitHub Pages environments.
 const withBasePath = (path: string) => `${BASE_PATH}${path}`
+
+type ContactFormData = {
+  name: string
+  email: string
+  subject: string
+  message: string
+}
 
 const experiences = [
   {
@@ -95,7 +105,15 @@ const navItems = ["About", "Skills", "Experience", "Projects", "Contact"]
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("About")
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [contactForm, setContactForm] = useState<ContactFormData>({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  })
   const containerRef = useRef<HTMLDivElement>(null)
+  const { toast } = useToast()
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -128,6 +146,79 @@ export default function Portfolio() {
     const element = document.getElementById(section.toLowerCase())
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  const handleContactInputChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = event.target
+    setContactForm((current) => ({
+      ...current,
+      [id]: value,
+    }))
+  }
+
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!WEB3FORMS_ACCESS_KEY) {
+      toast({
+        variant: "destructive",
+        title: "Missing Web3Forms access key",
+        description: "Add NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY to your environment before submitting the form.",
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          from_name: "Portfolio Contact Form",
+          name: contactForm.name,
+          email: contactForm.email,
+          message: contactForm.message,
+          subject: contactForm.subject || "New portfolio message",
+          botcheck: "",
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Something went wrong while sending your message.")
+      }
+
+      setContactForm({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      })
+
+      toast({
+        title: "Message sent",
+        description: "Thanks for reaching out. Your message was sent successfully.",
+      })
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Message failed",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Your message could not be sent right now. Please try again.",
+      })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -194,7 +285,7 @@ export default function Portfolio() {
               <div className="relative">
                 <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden ring-4 ring-primary/30 ring-offset-4 ring-offset-background">
                   <Image
-                    src={withBasePath("/images/computer-setup.jpg")}
+                    src={withBasePath("/images/2x2.jpg")}
                     alt="Rajiv Ranjan Sah"
                     width={224}
                     height={224}
@@ -590,28 +681,65 @@ export default function Portfolio() {
             {/* Contact Form */}
             <div className="animate-in fade-in slide-in-from-right-6 duration-500 delay-300">
               <h3 className="text-lg font-semibold text-foreground mb-6">Send a Message</h3>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleContactSubmit}>
+                <input
+                  type="checkbox"
+                  name="botcheck"
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="text-sm text-muted-foreground mb-2 block">Name</label>
-                    <Input id="name" placeholder="Your name" className="bg-card" />
+                    <Input
+                      id="name"
+                      value={contactForm.name}
+                      onChange={handleContactInputChange}
+                      placeholder="Your name"
+                      className="bg-card"
+                      required
+                    />
                   </div>
                   <div>
                     <label htmlFor="email" className="text-sm text-muted-foreground mb-2 block">Email</label>
-                    <Input id="email" type="email" placeholder="your@email.com" className="bg-card" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={handleContactInputChange}
+                      placeholder="your@email.com"
+                      className="bg-card"
+                      required
+                    />
                   </div>
                 </div>
                 <div>
                   <label htmlFor="subject" className="text-sm text-muted-foreground mb-2 block">Subject</label>
-                  <Input id="subject" placeholder="What's this about?" className="bg-card" />
+                  <Input
+                    id="subject"
+                    value={contactForm.subject}
+                    onChange={handleContactInputChange}
+                    placeholder="What's this about?"
+                    className="bg-card"
+                    required
+                  />
                 </div>
                 <div>
                   <label htmlFor="message" className="text-sm text-muted-foreground mb-2 block">Message</label>
-                  <Textarea id="message" placeholder="Your message..." rows={5} className="bg-card resize-none" />
+                  <Textarea
+                    id="message"
+                    value={contactForm.message}
+                    onChange={handleContactInputChange}
+                    placeholder="Your message..."
+                    rows={5}
+                    className="bg-card resize-none"
+                    required
+                  />
                 </div>
-                <Button type="submit" className="w-full gap-2">
+                <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
                   <Send className="h-4 w-4" />
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </div>
