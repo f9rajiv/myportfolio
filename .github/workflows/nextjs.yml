@@ -33,6 +33,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install  # We changed 'ci' to 'install' to skip the lockfile check
+        env:
+          NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY }}
 
       - name: Build with Next.js
         run: npx next build
