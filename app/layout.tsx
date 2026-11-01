@@ -1,25 +1,18 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from '@/components/ui/toaster'
+import '@fontsource/ibm-plex-sans/400.css'
+import '@fontsource/ibm-plex-sans/400-italic.css'
+import '@fontsource/ibm-plex-sans/500.css'
+import '@fontsource/ibm-plex-sans/600.css'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: 'Portfolio | Creative Developer',
-  description: 'Building accessible, pixel-perfect digital experiences for the web.',
-  generator: 'v0.app',
-  // Use a single SVG icon that exists in /public to avoid 404s for missing PNG variants.
+  title: 'Rajiv Ranjan Sah, backend developer',
+  description:
+    'Backend developer with three years of Node.js and PostgreSQL work, now doing an MSc in Computer Science and Engineering at the University of Oulu.',
   icons: {
-    icon: [
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    // Reuse the same SVG for Apple touch icon to keep things simple.
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
     apple: '/icon.svg',
   },
 }

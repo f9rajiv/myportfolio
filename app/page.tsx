@@ -1,21 +1,21 @@
 "use client"
 
-import type { ChangeEvent, FormEvent } from "react"
-import { useEffect, useRef, useState } from "react"
-import { Github, Linkedin, Mail, ArrowDown, MapPin, Send, BookOpen, Brain, Sparkles, Cpu, Zap } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import type { ChangeEvent, FormEvent, ReactNode } from "react"
+import { useState } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { cn } from "@/lib/utils"
-import Image from "next/image"
 
-// Step 1: Read base path injected from next.config.mjs.
+// Base path injected from next.config.mjs, so asset URLs work locally and on GitHub Pages.
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? ""
-// Step 2: Build URLs that work in both local and GitHub Pages environments.
-const withBasePath = (path: string) => `${BASE_PATH}${path}`
+const with_base_path = (path: string) => `${BASE_PATH}${path}`
+
+const EMAIL_ADDRESS = "f9rajiv@gmail.com"
+const GITHUB_URL = "https://github.com/f9rajiv"
+const LINKEDIN_URL = "https://linkedin.com/in/rajivranjansah1"
 
 type ContactFormData = {
   name: string
@@ -24,154 +24,97 @@ type ContactFormData = {
   message: string
 }
 
-const experiences = [
-  {
-    period: "Dec 2022 — March 2026",
-    title: "Software Developer, Backend",
-    company: "IT Himalaya Pvt Ltd (Procit BV, Netherlands)",
-    location: "Kathmandu, Nepal",
-    description: [
-      "Designed microservices architecture using Node.js and Express for KCM / moveXM, building modular REST APIs with Swagger and implementing JWT-based authentication. Integrated Flowmailer and SurveyJS for scalable survey and notification workflows",
-      "Optimized PostgreSQL systems (functions, triggers, procedures) to handle datasets exceeding 700-800M records, achieving 1-2s response times and improving query performance",
-      "Containerized services using Docker and deployed on Azure with storage integration, improving scalability and environment consistency",
-      "Delivered features in Agile teams, contributing to code reviews and sprint cycles. Automated workflows with shell scripts and cron jobs"
-    ],
-    technologies: ["Node.js", "Express", "PostgreSQL", "Docker", "Azure", "JWT", "REST APIs"],
-  },
-  {
-    period: "Jun 2022 — Aug 2022",
-    title: "Internship",
-    company: "Crupee Software Development",
-    location: "Kathmandu, Nepal",
-    description: [
-      "Acquired knowledge in multiple web development technologies, concentrating on Node.js, Express, and MongoDB for implementing a data collection system",
-      "Implemented Web API for all the CRUD functionality of the application with HTTP verbs and Custom Routing for web API endpoints"
-    ],
-    technologies: ["Node.js", "Express", "MongoDB", "REST APIs"],
-  }
-]
-
-const education = {
-  institution: "Advanced College of Engineering & Management",
-  university: "Tribhuvan University, Nepal",
-  degree: "Bachelor of Engineering in Computer Engineering"
+const empty_contact_form: ContactFormData = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
 }
 
-const projects = [
+const work_history = [
   {
-    title: "Blog Website",
-    description: "A blog web app developed using Django and Python with user account registration, login, updating posts, deleting and viewing all posts.",
-    technologies: ["Python", "Django"],
-    period: "Sep 2022 - Nov 2022",
-    type: "Personal Project",
-    image: withBasePath("/images/computer-setup.jpg")
+    role: "Backend developer",
+    employer: "IT Himalaya, Kathmandu, working for Procit BV (Netherlands)",
+    period: "Dec 2022 – Mar 2026",
+    highlights: [
+      "Designed the microservice architecture for KCM and moveXM in Node.js and Express: modular REST APIs documented with Swagger, JWT authentication, and survey and notification workflows built on SurveyJS and Flowmailer.",
+      "Tuned PostgreSQL functions, triggers and procedures over tables of 700–800 million rows until the main queries answered in 1–2 seconds.",
+      "Containerised the services with Docker and deployed them on Azure with Azure Storage.",
+      "Worked in Scrum sprints with code review, and automated routine jobs with shell scripts and cron.",
+    ],
+    stack: "Node.js, Express, PostgreSQL, Docker, Azure, JWT",
   },
   {
-    title: "Realistic Rendering System using GAN",
-    description: "This system can render any greyscale video and images. Its conference paper was published at SET Conference.",
-    technologies: ["Deep Learning", "Image Processing", "Computer Vision", "AI"],
-    period: "Apr 2021 - Apr 2022",
-    type: "Team of 4",
-    image: withBasePath("/images/code-screen.jpg"),
-    published: true
+    role: "Backend developer intern",
+    employer: "Crupee Software Development, Kathmandu",
+    period: "Jun 2022 – Aug 2022",
+    highlights: [
+      "Built the REST API for a data collection system: full CRUD over HTTP with custom routing for each endpoint.",
+    ],
+    stack: "Node.js, Express, MongoDB",
+  },
+]
+
+const education_history = [
+  {
+    degree: "MSc, Computer Science and Engineering (applied computing)",
+    school: "University of Oulu, Finland",
+    period: "2026 – present",
   },
   {
-    title: "Automatic HTML Code Generation using LSTM and CNN",
-    description: "This system can recreate a website from the hand-drawn wireframe by generating the HTML tags automatically. Selected for poster presentation at SET Conference.",
-    technologies: ["Image Processing", "Computer Vision", "LSTM", "CNN"],
-    period: "Sep 2020 - Mar 2021",
-    type: "Team of 4",
-    image: withBasePath("/images/tech-abstract.jpg")
-  }
+    degree: "BE, Computer Engineering",
+    school: "Advanced College of Engineering & Management, Tribhuvan University, Nepal",
+    period: "2022",
+  },
 ]
 
-const skills = [
-  { category: "Languages", items: ["JavaScript (Node.js)", "TypeScript", "Python"] },
-  { category: "Frameworks", items: ["Express.js", "NestJS", "Django", "TensorFlow", "Keras"] },
-  { category: "Databases", items: ["PostgreSQL", "MySQL", "MongoDB", "SQLite", "Redis"] },
-  { category: "Tools", items: ["Git", "Docker", "Azure", "JIRA", "Linux", "VSCode"] },
-  { category: "Concepts", items: ["REST APIs", "Microservices", "JWT Auth", "System Design", "Agile/Scrum"] },
+const skill_groups = [
+  { label: "Languages", items: "JavaScript (Node.js), TypeScript, Python" },
+  { label: "Backend", items: "Express, NestJS, Django, REST APIs, JWT auth, microservices" },
+  { label: "Databases", items: "PostgreSQL, MySQL, MongoDB, SQLite, Redis" },
+  { label: "Infrastructure", items: "Docker, Azure, Linux, Git, shell scripting" },
+  { label: "Machine learning", items: "TensorFlow, Keras; GANs, CNNs and LSTMs (see Projects)" },
+  { label: "Spoken", items: "English (fluent), Nepali (native), Finnish (beginner)" },
 ]
 
-const publication = {
-  authors: "Sah, R.R., Kafle, S., Timalsina, S., Thapa, U., and Dahal, S.",
-  title: "REALISTIC RENDERING SYSTEM USING GAN",
-  conference: "The 3rd Science Engineering and Technology Conference (SET-2021)",
-  location: "Kathmandu, Nepal"
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+  return (
+    <section
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className="grid gap-x-10 gap-y-5 border-t border-rule py-12 md:grid-cols-[8rem_1fr]"
+    >
+      <h2 id={`${id}-title`} className="text-base font-medium text-muted-foreground md:pt-0.5">
+        {title}
+      </h2>
+      <div className="min-w-0">{children}</div>
+    </section>
+  )
 }
-
-const navItems = ["About", "Skills", "Experience", "Projects", "Contact"]
 
 export default function Portfolio() {
-  const [activeSection, setActiveSection] = useState("About")
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [contactForm, setContactForm] = useState<ContactFormData>({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  })
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [is_submitting, set_is_submitting] = useState(false)
+  const [contact_form, set_contact_form] = useState<ContactFormData>(empty_contact_form)
   const { toast } = useToast()
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = navItems.map(item => document.getElementById(item.toLowerCase()))
-      const scrollPosition = window.scrollY + 200
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i]
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i])
-          break
-        }
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  const scrollToSection = (section: string) => {
-    const element = document.getElementById(section.toLowerCase())
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
-  }
-
-  const handleContactInputChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handle_contact_input_change = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = event.target
-    setContactForm((current) => ({
-      ...current,
-      [id]: value,
-    }))
+    set_contact_form((current_form) => ({ ...current_form, [id]: value }))
   }
 
-  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handle_contact_submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if (!WEB3FORMS_ACCESS_KEY) {
       toast({
         variant: "destructive",
-        title: "Missing Web3Forms access key",
-        description: "Add NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY to your environment before submitting the form.",
+        title: "The form isn't set up yet",
+        description: `Email me directly at ${EMAIL_ADDRESS} instead.`,
       })
       return
     }
 
-    setIsSubmitting(true)
+    set_is_submitting(true)
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -182,11 +125,11 @@ export default function Portfolio() {
         },
         body: JSON.stringify({
           access_key: WEB3FORMS_ACCESS_KEY,
-          from_name: "Portfolio Contact Form",
-          name: contactForm.name,
-          email: contactForm.email,
-          message: contactForm.message,
-          subject: contactForm.subject || "New portfolio message",
+          from_name: "Portfolio contact form",
+          name: contact_form.name,
+          email: contact_form.email,
+          message: contact_form.message,
+          subject: contact_form.subject || "New message from rajivranjansah.com.np",
           botcheck: "",
         }),
       })
@@ -194,565 +137,238 @@ export default function Portfolio() {
       const result = await response.json()
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Something went wrong while sending your message.")
+        throw new Error(result.message || "The form service rejected the message.")
       }
 
-      setContactForm({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      })
-
+      set_contact_form(empty_contact_form)
       toast({
         title: "Message sent",
-        description: "Thanks for reaching out. Your message was sent successfully.",
+        description: "I'll reply to the email address you gave.",
       })
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Message failed",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Your message could not be sent right now. Please try again.",
+        title: "Message not sent",
+        description: `${error instanceof Error ? error.message : "The form service didn't respond."} You can email me at ${EMAIL_ADDRESS}.`,
       })
     } finally {
-      setIsSubmitting(false)
+      set_is_submitting(false)
     }
   }
 
   return (
-    <div ref={containerRef} className="relative min-h-screen bg-background">
-      {/* Animated gradient orbs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl animate-pulse-medium" />
-        <div className="absolute top-1/2 left-1/2 w-72 h-72 bg-teal-500/5 rounded-full blur-3xl animate-pulse-fast" />
-      </div>
-      
-      {/* Spotlight effect */}
-      <div
-        className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.06), transparent 80%)`,
-        }}
-      />
+    <div className="mx-auto max-w-4xl px-6">
+      <header className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 py-6 text-sm">
+        <a href={with_base_path("/")} className="font-medium text-foreground no-underline">
+          rajivranjansah.com.np
+        </a>
+        <nav aria-label="Sections">
+          <ul className="flex gap-6">
+            <li><a href="#work">Work</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </header>
 
-      {/* Fixed Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Step 3: Keep home link valid for both "/" and "/myportfolio". */}
-            <a href={withBasePath("/")} className="text-lg font-bold text-foreground hover:text-primary transition-colors">
-              RRS
-            </a>
-            <ul className="hidden md:flex items-center gap-8">
-              {navItems.map((item) => (
-                <li key={item}>
-                  <button
-                    onClick={() => scrollToSection(item)}
-                    className={cn(
-                      "text-sm font-medium transition-colors hover:text-primary",
-                      activeSection === item ? "text-primary" : "text-muted-foreground"
-                    )}
-                  >
-                    {item}
-                  </button>
-                </li>
-              ))}
+      <main>
+        {/* Introduction */}
+        <section className="grid gap-10 pb-16 pt-12 md:grid-cols-[1fr_auto] md:pt-20">
+          <div className="max-w-[36rem]">
+            <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+              Rajiv Ranjan Sah
+            </h1>
+            <p className="mt-6 text-xl leading-relaxed">
+              Backend developer. For three years I built Node.js services and tuned PostgreSQL databases
+              with hundreds of millions of rows for Procit BV in the Netherlands. I&apos;m now doing an MSc
+              in Computer Science and Engineering at the University of Oulu.
+            </p>
+            <p className="mt-4 text-muted-foreground">
+              Based in Oulu, Finland, and open to backend developer roles and internships.
+            </p>
+            <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+              <li><a href={`mailto:${EMAIL_ADDRESS}`}>{EMAIL_ADDRESS}</a></li>
+              <li><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             </ul>
-            <div className="flex items-center gap-4">
-              <a href="https://github.com/f9rajiv" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                <Github className="h-5 w-5" />
-              </a>
-              <a href="https://linkedin.com/in/rajivranjansah1" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </a>
-            </div>
           </div>
-        </div>
-      </nav>
-
-      {/* Main Content - Single Column CV Style */}
-      <main className="relative z-10 max-w-4xl mx-auto px-6 pt-24">
-        
-        {/* Hero Section */}
-        <section id="about" className="min-h-screen flex flex-col justify-center py-20">
-          <div className="grid md:grid-cols-3 gap-12 items-center">
-            {/* Profile Image */}
-            <div className="md:col-span-1 flex justify-center animate-in fade-in zoom-in duration-700">
-              <div className="relative">
-                <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden ring-4 ring-primary/30 ring-offset-4 ring-offset-background">
-                  <Image
-                    src={withBasePath("/images/2x2.jpg")}
-                    alt="Rajiv Ranjan Sah"
-                    width={224}
-                    height={224}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full p-3 shadow-lg">
-                  <Send className="h-5 w-5" />
-                </div>
-              </div>
-            </div>
-            
-            {/* Hero Text */}
-            <div className="md:col-span-2 text-center md:text-left">
-              <p className="text-primary font-medium mb-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                Hello, I&apos;m
-              </p>
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-                Rajiv Ranjan Sah
-              </h1>
-              <h2 className="text-xl md:text-2xl text-primary font-medium mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
-                Software Developer, Backend
-              </h2>
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-250">
-                <Badge className="bg-gradient-to-r from-cyan-500/20 to-primary/20 text-primary border border-primary/30 gap-1">
-                  <Brain className="h-3 w-3" />
-                  AI Enthusiast
-                </Badge>
-                <Badge variant="outline" className="border-muted-foreground/30 text-muted-foreground gap-1">
-                  <Sparkles className="h-3 w-3" />
-                  Deep Learning
-                </Badge>
-              </div>
-              <p className="text-muted-foreground leading-relaxed mb-8 max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
-                Building scalable microservices and optimizing database systems. Passionate about AI/ML with published research in GANs and computer vision. Experienced in Node.js, Express, PostgreSQL, and cloud technologies.
-              </p>
-              
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  <span className="text-sm">Kathmandu, Nepal</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Mail className="h-4 w-4 text-primary" />
-                  <span className="text-sm">f9rajiv@gmail.com</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
-                <Button onClick={() => scrollToSection("contact")} className="gap-2">
-                  <Mail className="h-4 w-4" />
-                  Get In Touch
-                </Button>
-                {/* <Button variant="outline" asChild>
-                  <a href={withBasePath("/resume.pdf")} download>
-                    Download CV
-                  </a>
-                </Button> */}
-              </div>
-            </div>
-          </div>
-          
-          {/* Education Card */}
-          <div className="mt-16 p-6 bg-card rounded-xl border border-border animate-in fade-in slide-in-from-bottom-6 duration-500 delay-600">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-primary/10 rounded-lg">
-                <BookOpen className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">{education.degree}</h3>
-                <p className="text-primary font-medium">{education.institution}</p>
-                <p className="text-muted-foreground text-sm">{education.university}</p>
-                {/* <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
-                  <span>Graduated: {education.graduated}</span>
-                  <span>Score: {education.percentage}</span>
-                </div> */}
-              </div>
-            </div>
-          </div>
-          
-          {/* Scroll indicator */}
-          <div className="flex justify-center mt-16 animate-bounce">
-            <button onClick={() => scrollToSection("skills")} className="text-muted-foreground hover:text-primary transition-colors">
-              <ArrowDown className="h-6 w-6" />
-            </button>
-          </div>
+          <Image
+            src={with_base_path("/images/2x2.jpg")}
+            alt="Portrait of Rajiv Ranjan Sah"
+            width={160}
+            height={200}
+            priority
+            className="h-[200px] w-[160px] rounded-sm object-cover"
+          />
         </section>
 
-        {/* Skills Section */}
-        <section id="skills" className="py-20 border-t border-border">
-          <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-            Technical Skills
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {skills.map((skillGroup, index) => (
-              <div 
-                key={skillGroup.category}
-                className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-6 duration-500"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-4">{skillGroup.category}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {skillGroup.items.map((skill, i) => (
-                    <Badge 
-                      key={skill} 
-                      variant="secondary" 
-                      className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors animate-in fade-in zoom-in"
-                      style={{ animationDelay: `${(index * 100) + (i * 50)}ms` }}
-                    >
-                      {skill}
-                    </Badge>
+        <Section id="work" title="Work">
+          <div className="space-y-10">
+            {work_history.map((job) => (
+              <article key={job.role + job.period}>
+                <h3 className="text-lg font-semibold">{job.role}</h3>
+                <p>{job.employer}</p>
+                <p className="text-sm text-muted-foreground">{job.period}</p>
+                <ul className="mt-4 list-disc space-y-2 pl-5 marker:text-muted-foreground">
+                  {job.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
                   ))}
-                </div>
-              </div>
+                </ul>
+                <p className="mt-3 text-sm text-muted-foreground">{job.stack}</p>
+              </article>
             ))}
           </div>
-        </section>
+        </Section>
 
-        {/* AI Enthusiast Section */}
-        <section className="py-20 border-t border-border">
-          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-primary/10 text-primary text-sm font-medium mb-4">
-              <Brain className="h-4 w-4" />
-              Passion for Innovation
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              AI Enthusiast
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Exploring the frontiers of artificial intelligence with hands-on experience in deep learning, computer vision, and generative models.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Brain,
-                title: "Deep Learning",
-                description: "Experience with TensorFlow and Keras for building neural networks including GANs, CNNs, and LSTMs",
-                gradient: "from-purple-500/20 to-primary/20"
-              },
-              {
-                icon: Cpu,
-                title: "Computer Vision",
-                description: "Published research on realistic rendering using GANs and automatic HTML generation from wireframes",
-                gradient: "from-cyan-500/20 to-blue-500/20"
-              },
-              {
-                icon: Sparkles,
-                title: "Generative AI",
-                description: "Passionate about exploring LLMs, image generation, and the future of AI-powered applications",
-                gradient: "from-primary/20 to-teal-500/20"
-              }
-            ].map((item, index) => (
-              <div
-                key={item.title}
-                className="group relative bg-card rounded-2xl p-6 border border-border hover:border-primary/50 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2 overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-500"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                {/* Gradient background on hover */}
-                <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500",
-                  item.gradient
-                )} />
-                
-                <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-cyan-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <item.icon className="h-7 w-7 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Experience Section */}
-        <section id="experience" className="py-20 border-t border-border">
-          <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              <Zap className="h-4 w-4" />
-              Professional Journey
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-              Work Experience
-            </h2>
-          </div>
-          
-          <div className="relative">
-            {/* Animated gradient timeline line */}
-            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-cyan-500 to-primary/20" />
-            
-            {experiences.map((exp, index) => (
-              <div 
-                key={index}
-                className={cn(
-                  "relative mb-16 animate-in fade-in duration-700",
-                  index % 2 === 0 ? "md:pr-[52%]" : "md:pl-[52%] md:text-left"
-                )}
-                style={{ animationDelay: `${index * 200}ms` }}
-              >
-                {/* Timeline node with pulse effect */}
-                <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 z-20">
-                  <div className="relative">
-                    <div className="w-5 h-5 bg-primary rounded-full border-4 border-background shadow-lg shadow-primary/30" />
-                    <div className="absolute inset-0 w-5 h-5 bg-primary rounded-full animate-ping opacity-30" />
-                  </div>
-                </div>
-                
-                {/* Content card */}
-                <div className={cn(
-                  "ml-14 md:ml-0 group",
-                  index % 2 === 0 ? "md:mr-8" : "md:ml-8"
-                )}>
-                  <div className="relative bg-card rounded-2xl p-6 border border-border hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 overflow-hidden">
-                    {/* Decorative gradient blob */}
-                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-primary/20 to-cyan-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    {/* Period badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-cyan-500/10 border border-primary/20 text-sm text-primary font-medium mb-4">
-                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                      {exp.period}
-                    </div>
-                    
-                    {/* Title and company */}
-                    <h3 className="text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                      {exp.title}
-                    </h3>
-                    <p className="text-primary font-semibold mb-1">{exp.company}</p>
-                    <div className="flex items-center gap-1 text-muted-foreground text-sm mb-5">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {exp.location}
-                    </div>
-                    
-                    {/* Description with styled bullets */}
-                    <ul className="space-y-3 mb-5">
-                      {exp.description.map((item, i) => (
-                        <li key={i} className="flex gap-3 group/item">
-                          <span className="mt-2 shrink-0 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-primary to-cyan-500" />
-                          <span className="text-muted-foreground text-sm leading-relaxed group-hover/item:text-foreground transition-colors">
-                            {item}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    {/* Tech stack with icons */}
-                    <div className="flex flex-wrap gap-2 pt-4 border-t border-border/50">
-                      {exp.technologies.map((tech, i) => (
-                        <Badge 
-                          key={tech} 
-                          variant="secondary" 
-                          className="bg-gradient-to-r from-secondary to-secondary/50 hover:from-primary/20 hover:to-cyan-500/20 transition-all duration-300 text-xs font-medium"
-                          style={{ animationDelay: `${i * 50}ms` }}
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects" className="py-20 border-t border-border">
-          <h2 className="text-2xl font-bold text-foreground mb-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-            Projects
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {projects.map((project, index) => (
-              <div
-                key={index}
-                className="group bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-6 duration-500"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="relative aspect-video overflow-hidden">
+        <Section id="projects" title="Projects">
+          <div className="space-y-14">
+            <article>
+              <h3 className="text-lg font-semibold">Colourising old photos and film with a GAN</h3>
+              <p className="text-sm text-muted-foreground">Apr 2021 – Apr 2022, team of 4</p>
+              <figure className="mt-5">
+                <div className="grid max-w-[34rem] grid-cols-2 gap-3">
                   <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    src={with_base_path("/images/projects/gan-input.jpg")}
+                    alt="Black and white engraving of a temple square in Nepal"
+                    width={273}
+                    height={184}
+                    className="aspect-square w-full rounded-sm object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60" />
-                  {project.published && (
-                    <div className="absolute top-3 right-3">
-                      <Badge className="bg-primary text-primary-foreground">Published</Badge>
-                    </div>
-                  )}
+                  <Image
+                    src={with_base_path("/images/projects/gan-output.jpg")}
+                    alt="The same engraving after the model added colour"
+                    width={256}
+                    height={256}
+                    className="aspect-square w-full rounded-sm object-cover"
+                  />
                 </div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                    <span>{project.period}</span>
-                    <span>&#8226;</span>
-                    <span>{project.type}</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
-                      <Badge key={tech} variant="secondary" className="text-xs bg-primary/10 text-primary">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Publication */}
-          <div className="mt-12 p-6 bg-card rounded-xl border border-border animate-in fade-in slide-in-from-bottom-6 duration-500">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Publication</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              <span className="text-foreground">{publication.authors}</span>, &quot;{publication.title}&quot;, <em>{publication.conference}</em>, {publication.location}.
-            </p>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="py-20 border-t border-border">
-          <h2 className="text-2xl font-bold text-foreground mb-4 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-            Get In Touch
-          </h2>
-          <p className="text-muted-foreground text-center mb-12 max-w-lg mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
-            I&apos;m currently open to new opportunities. Whether you have a question or just want to say hi, feel free to reach out!
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <div className="space-y-6 animate-in fade-in slide-in-from-left-6 duration-500 delay-200">
-              <h3 className="text-lg font-semibold text-foreground">Contact Information</h3>
-              
-              <div className="space-y-4">
-                <a href="mailto:f9rajiv@gmail.com" className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary/50 transition-all group">
-                  <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                    <Mail className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="text-foreground font-medium">f9rajiv@gmail.com</p>
-                  </div>
+                <figcaption className="mt-2 text-sm text-muted-foreground">
+                  A greyscale engraving given to the model (left) and the colourised result (right).
+                </figcaption>
+              </figure>
+              <p className="mt-5 max-w-[38rem]">
+                A generative adversarial network that adds plausible colour to black and white images and
+                video frames. We trained it in TensorFlow and Keras and wrapped it in a Django web app for
+                uploading images and video.
+              </p>
+              <p className="mt-3 max-w-[38rem] text-sm text-muted-foreground">
+                Sah, R.R., Kafle, S., Timalsina, S., Thapa, U. and Dahal, S. &ldquo;Realistic rendering
+                system using GAN.&rdquo; <em>3rd Science, Engineering and Technology Conference (SET-2021)</em>,
+                Kathmandu.
+              </p>
+              <p className="mt-3">
+                <a href="https://github.com/f9rajiv/Realistic-Rendering-system-using-GAN" target="_blank" rel="noopener noreferrer">
+                  Code on GitHub
                 </a>
-                
-               
-                <div className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border">
-                  <div className="p-3 bg-primary/10 rounded-lg">
-                    <MapPin className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Location</p>
-                    <p className="text-foreground font-medium">Kathmandu, Nepal</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Social Links */}
-              <div>
-                <h4 className="text-sm font-medium text-muted-foreground mb-4">Find me on</h4>
-                <div className="flex items-center gap-4">
-                  {[
-                    { href: "https://github.com/f9rajiv", icon: Github, label: "GitHub" },
-                    { href: "https://linkedin.com/in/rajivranjansah1", icon: Linkedin, label: "LinkedIn" },
-                  ].map((social) => (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 bg-card rounded-lg border border-border text-muted-foreground hover:text-primary hover:border-primary/50 transition-all hover:-translate-y-1"
-                      aria-label={social.label}
-                    >
-                      <social.icon className="h-5 w-5" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            {/* Contact Form */}
-            <div className="animate-in fade-in slide-in-from-right-6 duration-500 delay-300">
-              <h3 className="text-lg font-semibold text-foreground mb-6">Send a Message</h3>
-              <form className="space-y-4" onSubmit={handleContactSubmit}>
-                <input
-                  type="checkbox"
-                  name="botcheck"
-                  className="hidden"
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="text-sm text-muted-foreground mb-2 block">Name</label>
-                    <Input
-                      id="name"
-                      value={contactForm.name}
-                      onChange={handleContactInputChange}
-                      placeholder="Your name"
-                      className="bg-card"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="text-sm text-muted-foreground mb-2 block">Email</label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={contactForm.email}
-                      onChange={handleContactInputChange}
-                      placeholder="your@email.com"
-                      className="bg-card"
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="subject" className="text-sm text-muted-foreground mb-2 block">Subject</label>
-                  <Input
-                    id="subject"
-                    value={contactForm.subject}
-                    onChange={handleContactInputChange}
-                    placeholder="What's this about?"
-                    className="bg-card"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="text-sm text-muted-foreground mb-2 block">Message</label>
-                  <Textarea
-                    id="message"
-                    value={contactForm.message}
-                    onChange={handleContactInputChange}
-                    placeholder="Your message..."
-                    rows={5}
-                    className="bg-card resize-none"
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
-                  <Send className="h-4 w-4" />
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                </Button>
-              </form>
-            </div>
-          </div>
-        </section>
+              </p>
+            </article>
 
-        {/* Footer */}
-        <footer className="py-8 border-t border-border text-center">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Rajiv Ranjan Sah. All rights reserved.
+            <article>
+              <h3 className="text-lg font-semibold">HTML from hand-drawn wireframes</h3>
+              <p className="text-sm text-muted-foreground">Sep 2020 – Mar 2021, team of 4, poster at SET-2021</p>
+              <figure className="mt-5">
+                <Image
+                  src={with_base_path("/images/projects/wireframe-sketch.jpg")}
+                  alt="Pencil sketch of a web page with a navigation bar, heading, text field, buttons and footer"
+                  width={1200}
+                  height={865}
+                  className="w-full max-w-[26rem] rounded-sm"
+                />
+                <figcaption className="mt-2 text-sm text-muted-foreground">
+                  One of the paper wireframes the system turns into HTML.
+                </figcaption>
+              </figure>
+              <p className="mt-5 max-w-[38rem]">
+                Photograph a wireframe sketched on paper and get back the HTML for it. A CNN reads the
+                sketch and an LSTM writes out the tags one at a time.
+              </p>
+              <p className="mt-3">
+                <a href="https://github.com/f9rajiv/AUTOMATIC-HTML-CODE-GENERATOR-USING-LSTM" target="_blank" rel="noopener noreferrer">
+                  Code on GitHub
+                </a>
+              </p>
+            </article>
+
+            <article>
+              <h3 className="text-lg font-semibold">Blog platform</h3>
+              <p className="text-sm text-muted-foreground">Sep 2022 – Nov 2022, personal project</p>
+              <p className="mt-3 max-w-[38rem]">
+                A Django blog with sign-up, login and profile pictures, where users write, edit and delete
+                their own posts.
+              </p>
+              <p className="mt-3">
+                <a href="https://github.com/f9rajiv/blogsites" target="_blank" rel="noopener noreferrer">
+                  Code on GitHub
+                </a>
+              </p>
+            </article>
+          </div>
+        </Section>
+
+        <Section id="education" title="Education">
+          <div className="space-y-6">
+            {education_history.map((entry) => (
+              <div key={entry.degree}>
+                <h3 className="text-lg font-semibold">{entry.degree}</h3>
+                <p>{entry.school}</p>
+                <p className="text-sm text-muted-foreground">{entry.period}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="skills" title="Skills">
+          <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-[9rem_1fr]">
+            {skill_groups.map((group) => (
+              <div key={group.label} className="contents">
+                <dt className="font-medium">{group.label}</dt>
+                <dd className="mb-2 sm:mb-0">{group.items}</dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
+
+        <Section id="contact" title="Contact">
+          <p className="max-w-[36rem]">
+            Email me at <a href={`mailto:${EMAIL_ADDRESS}`}>{EMAIL_ADDRESS}</a> or send a message here.
           </p>
-        </footer>
+          <form className="mt-6 max-w-[36rem] space-y-4" onSubmit={handle_contact_submit}>
+            <input type="checkbox" name="botcheck" className="hidden" tabIndex={-1} autoComplete="off" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="mb-1.5 block text-sm font-medium">Name</label>
+                <Input id="name" value={contact_form.name} onChange={handle_contact_input_change} autoComplete="name" required />
+              </div>
+              <div>
+                <label htmlFor="email" className="mb-1.5 block text-sm font-medium">Email</label>
+                <Input id="email" type="email" value={contact_form.email} onChange={handle_contact_input_change} autoComplete="email" required />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="subject" className="mb-1.5 block text-sm font-medium">
+                Subject <span className="font-normal text-muted-foreground">(optional)</span>
+              </label>
+              <Input id="subject" value={contact_form.subject} onChange={handle_contact_input_change} />
+            </div>
+            <div>
+              <label htmlFor="message" className="mb-1.5 block text-sm font-medium">Message</label>
+              <Textarea id="message" value={contact_form.message} onChange={handle_contact_input_change} rows={6} required />
+            </div>
+            <Button type="submit" disabled={is_submitting}>
+              {is_submitting ? "Sending…" : "Send message"}
+            </Button>
+            <p className="text-sm text-muted-foreground">
+              Your name, email and message go to me through{" "}
+              <a href="https://web3forms.com/privacy" target="_blank" rel="noopener noreferrer">Web3Forms</a>{" "}
+              and are only used to reply to you.
+            </p>
+          </form>
+        </Section>
       </main>
+
+      <footer className="border-t border-rule py-8 text-sm text-muted-foreground">
+        © {new Date().getFullYear()} Rajiv Ranjan Sah
+      </footer>
     </div>
   )
 }
